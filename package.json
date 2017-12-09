@@ -16,7 +16,7 @@
     "ws": "0.4.x"
   },
   "engines": {
-    "node": "0.10.x"
+    "node": "4.6.2"
   },
   "scripts": {
     "start": "node node.js",

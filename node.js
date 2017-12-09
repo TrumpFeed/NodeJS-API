@@ -93,7 +93,7 @@ app.post('/cnnfeed', function (req, res) {
 
 function getDataFromDatabase(tableName, res){
   var rows = [];
-  var queryString = "SELECT * FROM " + tableName + " order by created_at desc";
+  var queryString = "SELECT * FROM " + tableName + " order by created_at desc limit 25";
   var query = baseClient.query(queryString);
   query.on('row', function(row) {
       rows.push(row);

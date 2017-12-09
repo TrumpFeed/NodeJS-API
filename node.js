@@ -84,22 +84,55 @@ function postCNNToDatabase(articles){
 }
 
 app.post('/twitterfeed', function (req, res) {
-  getDataFromDatabase('twitter', res);
+  return new Promise(function(resolve, reject){
+    return getDataFromDatabase('twitter', resolve);
+  }).then(function(rows) {
+    res.json(rows);
+  });
 });
 
 app.post('/cnnfeed', function (req, res) {
-  getDataFromDatabase('cnn', res);
+  return new Promise(function(resolve, reject){
+    return getDataFromDatabase('cnn', resolve);
+  }).then(function(rows) {
+    res.json(rows);
+  });
 });
 
-function getDataFromDatabase(tableName, res){
+app.post('/feed', function (req, res) {
+  var combinedRows = [];
+
+
+  var p1 = new Promise((resolve, reject) => {
+    return getDataFromDatabase('twitter', resolve);
+  });
+  var p2 = new Promise((resolve, reject) => {
+    return getDataFromDatabase('cnn', resolve);
+  });
+    // combinedRows.push(rows);
+
+  Promise.all([p1, p2]).then(values => {
+      var merged = [].concat.apply([], values);
+      var mergedSorted = merged.sort(function(a, b) {
+          return new Date(a.created_at) - new Date(b.created_at);
+      });
+      console.log(mergedSorted.length);
+      res.json(mergedSorted);
+  });
+
+
+});
+
+function getDataFromDatabase(tableName, resolve){
   var rows = [];
   var queryString = "SELECT * FROM " + tableName + " order by created_at desc limit 25";
   var query = baseClient.query(queryString);
   query.on('row', function(row) {
+      row.type = tableName;
       rows.push(row);
   });
   query.on('end', function(result) {
-      res.json(rows);
+      resolve(rows);
   });
 }
 

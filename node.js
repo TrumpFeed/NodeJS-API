@@ -34,13 +34,13 @@ pg.connect(process.env.DATABASE_URL || credentials.database, function(err, clien
     }
     baseClient = client;
 
-    // setInterval(function(){
-    //   twitterFeed();
-    //   cnnFeed();
-    // }, credentials.crawlTime);
-    //
-    // twitterFeed();
-    // cnnFeed();
+    setInterval(function(){
+      twitterFeed();
+      cnnFeed();
+    }, credentials.crawlTime);
+
+    twitterFeed();
+    cnnFeed();
 
 });
 var that = this;

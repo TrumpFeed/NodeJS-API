@@ -8,6 +8,7 @@
   "dependencies": {
     "async": "^2.6.0",
     "body-parser": "^1.15.0",
+    "cheerio": "^1.0.0-rc.2",
     "express": "^4.16.2",
     "feedparser": "^2.2.4",
     "ignore-case": "^0.1.0",

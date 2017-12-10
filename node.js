@@ -205,6 +205,11 @@ function checkIfTextMentioned(title, summary, searchStrings) {
 function cb(error, feedMeta, articles){
 
   var articlesFormatted = articles.filter(function (article) {
+    if(article.title == 'Trump recorded robocall for Roy Moore')
+  {
+    // console.log(article)
+  }
+
       return (checkIfTextMentioned(article.title, article.summary, credentials.searchStrings) > credentials.pointsMinThreshold);
   })
   .map(function (article, index, array) {

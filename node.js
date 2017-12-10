@@ -202,7 +202,7 @@ function checkIfTextMentioned(title, summary, searchStrings) {
   return count;
 }
 
-function cb(error, feedMeta, articles){
+function cb(error, feedMeta, articles, resolve){
 
   var articlesFormatted = articles.filter(function (article) {
     if(article.title == 'Trump recorded robocall for Roy Moore')
@@ -224,17 +224,40 @@ function cb(error, feedMeta, articles){
 
   console.log("CNN", articlesFormatted.length);
   postCNNToDatabase(articlesFormatted);
+  resolve();
 }
 
 function cnnFeed(){
   var cnn = require('./lib/cnnrssfeed');
+  // return new Promise(function(resolve, reject){
+  //   cnn.top(cb);
+  //   cnn.world(cb);
+  //   cnn.us(cb);
+  //   cnn.politics(cb);
+  //   cnn.latest(cb);
+  //   resolve();
+  // });
+
+
   return new Promise(function(resolve, reject){
-    cnn.top(cb);
-    cnn.world(cb);
-    cnn.us(cb);
-    cnn.politics(cb);
-    cnn.latest(cb);
-    resolve();
+    cnn.top(cb, resolve);
+  }).then(function(){
+    return new Promise((resolve, reject) => { // (*)
+      cnn.world(cb, resolve);
+    });
+  }).then(function(){
+    return new Promise((resolve, reject) => { // (*)
+      cnn.us(cb, resolve);
+    });
+  }).then(function(){
+    return new Promise((resolve, reject) => { // (*)
+      cnn.politics(cb, resolve);
+    });
+    // return true;
+  }).then(function(){
+    return new Promise((resolve, reject) => { // (*)
+      cnn.latest(cb, resolve);
+    });
   });
 }
 

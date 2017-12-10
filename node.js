@@ -123,6 +123,18 @@ app.post('/feed', function (req, res) {
 
 });
 
+app.post('/cleardatabase', function (req, res) {
+  clearDataFromDatabase();
+  res.json({"result": "erased"});
+});
+
+function clearDataFromDatabase(){
+  var queryStringT = "DELETE FROM twitter";
+  baseClient.query(queryStringT);
+  var queryStringC = "DELETE FROM cnn";
+  baseClient.query(queryStringC);
+}
+
 function getDataFromDatabase(tableName, resolve){
   var rows = [];
   var queryString = "SELECT * FROM " + tableName + " order by created_at desc limit 25";
@@ -147,7 +159,7 @@ function twitterFeed(){
     if (!error) {
       var tweetsFormatted = tweets.map(function (tweet, index, array) {
         return {
-          id: tweet.id,
+          id: tweet.id_str,
           full_text: tweet.full_text,
           created_at: new Date(tweet.created_at),
         }
